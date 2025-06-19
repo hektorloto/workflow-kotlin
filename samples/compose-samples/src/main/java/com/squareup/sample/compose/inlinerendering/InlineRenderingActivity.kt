@@ -13,23 +13,22 @@ import com.squareup.workflow1.config.AndroidRuntimeConfigTools
 import com.squareup.workflow1.mapRendering
 import com.squareup.workflow1.ui.Screen
 import com.squareup.workflow1.ui.ViewEnvironment
-import com.squareup.workflow1.ui.WorkflowLayout
 import com.squareup.workflow1.ui.compose.withComposeInteropSupport
 import com.squareup.workflow1.ui.renderWorkflowIn
 import com.squareup.workflow1.ui.withEnvironment
+import com.squareup.workflow1.ui.workflowContentView
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * A workflow that returns an anonymous `ComposeRendering`.
+ * A workflow that returns an anonymous
+ * [ComposeScreen][com.squareup.workflow1.ui.compose.ComposeScreen].
  */
 class InlineRenderingActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     val model: HelloBindingModel by viewModels()
-    setContentView(
-      WorkflowLayout(this).apply { take(lifecycle, model.renderings) }
-    )
+    workflowContentView.take(lifecycle, model.renderings)
   }
 
   class HelloBindingModel(savedState: SavedStateHandle) : ViewModel() {

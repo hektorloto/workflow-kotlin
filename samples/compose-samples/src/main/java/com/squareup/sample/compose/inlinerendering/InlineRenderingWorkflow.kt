@@ -35,22 +35,30 @@ object InlineRenderingWorkflow : StatefulWorkflow<Unit, Int, Nothing, Screen>() 
   override fun render(
     renderProps: Unit,
     renderState: Int,
-    context: RenderContext
+    context: RenderContext<Unit, Int, Nothing>
   ): ComposeScreen {
     val onClick = context.eventHandler("increment") { state += 1 }
     return ComposeScreen {
-      Box {
-        Button(onClick = onClick) {
-          Text("Counter: ")
-          AnimatedCounter(renderState) { counterValue ->
-            Text(counterValue.toString())
-          }
-        }
-      }
+      Content(renderState, onClick)
     }
   }
 
   override fun snapshotState(state: Int): Snapshot = Snapshot.of(state)
+}
+
+@Composable
+private fun Content(
+  count: Int,
+  onClick: () -> Unit
+) {
+  Box {
+    Button(onClick = onClick) {
+      Text("Counter: ")
+      AnimatedCounter(count) { counterValue ->
+        Text(counterValue.toString())
+      }
+    }
+  }
 }
 
 @Composable
