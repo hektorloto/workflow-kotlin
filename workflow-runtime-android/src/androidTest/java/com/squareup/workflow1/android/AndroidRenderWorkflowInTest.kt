@@ -1,4 +1,4 @@
-package com.squareup.workflow1.ui
+package com.squareup.workflow1.android
 
 import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
@@ -10,7 +10,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.google.common.truth.Truth.assertThat
 import com.squareup.workflow1.StatelessWorkflow
+import com.squareup.workflow1.ui.AndroidScreen
+import com.squareup.workflow1.ui.Screen
+import com.squareup.workflow1.ui.ScreenViewFactory
+import com.squareup.workflow1.ui.ScreenViewHolder
 import com.squareup.workflow1.ui.internal.test.IdlingDispatcherRule
+import com.squareup.workflow1.ui.workflowContentView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import leakcanary.DetectLeaksAfterTestSuccess
@@ -38,9 +43,7 @@ internal class AndroidRenderWorkflowInTest {
         savedStateHandle = model.savedStateHandle
       )
 
-      val layout = WorkflowLayout(activity)
-      activity.setContentView(layout)
-
+      val layout = activity.workflowContentView
       assertThat(model.savedStateHandle.contains(KEY)).isFalse()
 
       job = layout.take(activity.lifecycle, renderings)
@@ -79,7 +82,7 @@ internal class AndroidRenderWorkflowInTest {
   object SomeWorkflow : StatelessWorkflow<Unit, Nothing, Screen>() {
     override fun render(
       renderProps: Unit,
-      context: RenderContext
+      context: RenderContext<Unit, Nothing>
     ): Screen {
       return SomeScreen
     }
