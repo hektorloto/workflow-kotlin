@@ -52,7 +52,7 @@ internal class SubtreeManagerTest {
     override fun render(
       renderProps: String,
       renderState: String,
-      context: RenderContext
+      context: StatefulWorkflow.RenderContext<String, String, String>
     ): Rendering {
       return Rendering(
         renderProps,
@@ -82,7 +82,7 @@ internal class SubtreeManagerTest {
     override fun render(
       renderProps: Unit,
       renderState: Unit,
-      context: RenderContext
+      context: RenderContext<Unit, Unit, Nothing>
     ) {
     }
 
@@ -305,7 +305,7 @@ internal class SubtreeManagerTest {
   @Suppress("UNCHECKED_CAST")
   private suspend fun <P, S, O : Any> SubtreeManager<P, S, O>.applyNextAction() =
     select<ActionProcessingResult?> {
-      onNextChildAction(this)
+      registerChildActionSelectors(this)
     } as ActionApplied<WorkflowAction<P, S, O>?>
 
   private fun <P, S, O : Any> subtreeManagerForTest(
